@@ -10,3 +10,12 @@
 ✅ Firebase Authentication for secure login/logout
 ✅ Offline-first reactive UI with StateFlow & Live updates
 ✅ Clean and maintainable architecture using MVVM + Repository Pattern
+
+
+▶️ How to Build and Run
+
+1️⃣ Clone this repository
+2️⃣ Open in Android Studio
+3️⃣ Sync Gradle
+4️⃣ Connect Firebase using google-services.json
+5️⃣ Run on emulator or physical Android device
