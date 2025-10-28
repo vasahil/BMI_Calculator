@@ -31,6 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.sahil.bmi_calculator.data.dto.WeightHistory
+import com.sahil.bmi_calculator.presentation.chart.WeightGraph
 import com.sahil.bmi_calculator.presentation.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -306,6 +308,9 @@ fun HomeScreen(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    WeightGraph(history.value.success)
+
                 }
             }
         }

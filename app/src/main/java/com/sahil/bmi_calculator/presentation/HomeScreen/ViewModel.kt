@@ -26,8 +26,8 @@ class HomeViewModel @Inject constructor(
 
     private var lastWeight: String? = null
 
-    private val _history = MutableStateFlow(HistoryState())
-    val history = _history.asStateFlow()
+    private var _history = MutableStateFlow(HistoryState())
+    var history = _history.asStateFlow()
 
     init {
         fetchHistory()
@@ -138,6 +138,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             repoImpl.getBMIHistory().collect { result ->
                 when (result) {
+
                     is ResultState.Loading -> {
                         _history.value = _history.value.copy(loader = true)
                     }
@@ -145,7 +146,7 @@ class HomeViewModel @Inject constructor(
                     is ResultState.Success -> {
                         _history.value = _history.value.copy(
                             loader = false,
-                            success = result.data
+                            success = result.data.sortedBy { it.timeStamp }
                         )
                     }
 
@@ -159,6 +160,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
 }
 
 data class BMI(
