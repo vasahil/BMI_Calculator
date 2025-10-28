@@ -20,4 +20,7 @@
 4️⃣ Connect Firebase using google-services.json
 5️⃣ Run on emulator or physical Android device
 
-![1761664152272](https://github.com/user-attachments/assets/2a15685d-e912-4a99-99f8-71c0856bfb3d)
+
+<img src="![1761664152272](https://github.com/user-attachments/assets/8e5d70e7-a556-45d7-bbbe-6453177af3e3)
+" width="350" height="700"/>
+
