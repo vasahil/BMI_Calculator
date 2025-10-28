@@ -16,16 +16,11 @@ import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.TrendingDown
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -36,9 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.sahil.bmi_calculator.presentation.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,45 +40,45 @@ fun HomeScreen(
     firebaseAuth: FirebaseAuth,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    // ✅ Refresh data when screen appears
+    LaunchedEffect(Unit) {
+        viewModel.loadUserDetails()
+    }
 
     val state = viewModel.user.collectAsStateWithLifecycle()
-    val bmi = viewModel.bmi.collectAsStateWithLifecycle()
+    val bmi by viewModel.bmi.collectAsStateWithLifecycle()
     val history = viewModel.history.collectAsStateWithLifecycle()
 
-    val bmiVal = bmi.value.success?.toFloatOrNull()
+    val bmiVal = bmi.success?.toFloatOrNull()
 
     var health by rememberSaveable { mutableStateOf("") }
     var healthColor by remember { mutableStateOf(Color.Gray) }
     var healthIcon: ImageVector = Icons.Default.FitnessCenter
     var healthAdvice by rememberSaveable { mutableStateOf("") }
 
-
-
-
-
     bmiVal?.let { value ->
         when {
             value < 18f -> {
                 health = "Underweight"
-                healthColor = Color(0xFF2196F3) // Blue
+                healthColor = Color(0xFF2196F3)
                 healthIcon = Icons.Default.TrendingDown
                 healthAdvice = "Consider increasing calorie intake and consulting a nutritionist"
             }
             value >= 18f && value < 25f -> {
                 health = "Normal Weight"
-                healthColor = Color(0xFF4CAF50) // Green
+                healthColor = Color(0xFF4CAF50)
                 healthIcon = Icons.Default.FitnessCenter
                 healthAdvice = "Great! Maintain your healthy lifestyle"
             }
             value >= 25f && value < 30f -> {
                 health = "Overweight"
-                healthColor = Color(0xFFFF9800) // Orange
+                healthColor = Color(0xFFFF9800)
                 healthIcon = Icons.Default.TrendingUp
                 healthAdvice = "Consider regular exercise and balanced diet"
             }
             value >= 30f -> {
                 health = "Obese"
-                healthColor = Color(0xFFF44336) // Red
+                healthColor = Color(0xFFF44336)
                 healthIcon = Icons.Default.TrendingUp
                 healthAdvice = "Consult a healthcare provider for personalized guidance"
             }
@@ -169,10 +161,9 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
 
-                    // BMI Result Card - Main Focus
+                    // BMI Result Card
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
                         colors = CardDefaults.cardColors(
@@ -193,13 +184,12 @@ fun HomeScreen(
 
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            // BMI Value Display
                             Row(
                                 verticalAlignment = Alignment.Bottom,
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = bmi.value.success ?: "--",
+                                    text = bmi.success ?: "--",
                                     fontSize = 48.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
@@ -214,7 +204,6 @@ fun HomeScreen(
 
                             Spacer(modifier = Modifier.height(12.dp))
 
-                            // Health Status
                             Text(
                                 text = health,
                                 fontSize = 20.sp,
@@ -255,7 +244,7 @@ fun HomeScreen(
                         }
                     }
 
-                    // Stats Section Header
+                    // Stats Section
                     Text(
                         text = "Your Measurements",
                         style = MaterialTheme.typography.titleLarge,
@@ -266,12 +255,10 @@ fun HomeScreen(
                         textAlign = TextAlign.Start
                     )
 
-                    // Weight and Height Cards
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        // Weight Card
                         InfoCard(
                             modifier = Modifier.weight(1f),
                             icon = Icons.Default.MonitorWeight,
@@ -281,7 +268,6 @@ fun HomeScreen(
                             color = MaterialTheme.colorScheme.primary
                         )
 
-                        // Height Card
                         InfoCard(
                             modifier = Modifier.weight(1f),
                             icon = Icons.Default.Height,
@@ -292,7 +278,7 @@ fun HomeScreen(
                         )
                     }
 
-                    // BMI Range Reference Card
+                    // BMI Categories
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
@@ -321,14 +307,7 @@ fun HomeScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
-
-
-
-
             }
-
-
         }
     }
 }
@@ -381,9 +360,7 @@ fun InfoCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Row(
-                verticalAlignment = Alignment.Bottom
-            ) {
+            Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = value,
                     fontSize = 24.sp,
@@ -410,9 +387,7 @@ fun BMICategoryRow(category: String, range: String, color: Color) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
                     .size(12.dp)

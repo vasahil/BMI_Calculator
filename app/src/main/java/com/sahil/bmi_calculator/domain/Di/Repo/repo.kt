@@ -25,4 +25,6 @@ interface Repo {
 
 //    fun getLastHistory(weightHistory: WeightHistory): Flow<ResultState<WeightHistory>>
     fun getBMIHistory(): Flow<ResultState<List<WeightHistory>>>
+
+     fun updateUserWeight(newWeight: String): Flow<ResultState<String>>
 }
