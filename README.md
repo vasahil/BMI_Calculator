@@ -21,7 +21,7 @@
 5️⃣ Run on emulator or physical Android device
 
 
-<img src="your-image-link" width="350" height="700"/>
+<img src="[your-image-link](https://github.com/vasahil/BMI_Calculator/blob/master/1761664152272.jpg)" width="350" height="700"/>
 <img src="your-image-link" width="350" height="700"/>
 <img src="your-image-link" width="350" height="700"/>
 
